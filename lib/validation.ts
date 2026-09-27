@@ -1,0 +1,4 @@
+import {z} from "zod";
+export const customerSchema=z.object({name:z.string().trim().min(2).max(120),email:z.string().trim().email().max(254).optional().or(z.literal("")),phone:z.string().trim().max(40).optional().or(z.literal(""))});
+export const serviceSchema=z.object({name:z.string().trim().min(2).max(160),description:z.string().trim().max(1000).optional().or(z.literal("")),priceCents:z.number().int().nonnegative().max(100000000)});
+export const quoteSchema=z.object({customerId:z.string().uuid(),title:z.string().trim().min(2).max(180),notes:z.string().trim().max(5000).optional().or(z.literal("")),items:z.array(z.object({serviceId:z.string().uuid().nullable(),description:z.string().trim().min(1).max(500),quantity:z.number().int().positive().max(10000),unitPriceCents:z.number().int().nonnegative().max(100000000)})).min(1).max(100)});
