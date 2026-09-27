@@ -1,0 +1,3 @@
+import {createClient} from "@/lib/supabase/server";
+export async function requireUser(){const supabase=await createClient();const {data:{user},error}=await supabase.auth.getUser();if(error||!user)throw new Error("UNAUTHENTICATED");return {supabase,user};}
+export async function currentMembership(){const {supabase,user}=await requireUser();const {data,error}=await supabase.from("organization_members").select("organization_id,role,status,organizations(id,name,slug)").eq("user_id",user.id).eq("status","active").limit(1).maybeSingle();if(error||!data)throw new Error("NO_ORGANIZATION");return {supabase,user,membership:data};}
